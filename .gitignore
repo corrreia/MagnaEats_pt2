@@ -1,0 +1,9 @@
+*.o
+*.out
+
+bin/
+obj/
+.vscode/
+.idea/
+testes/
+magnaeats 
