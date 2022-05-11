@@ -48,22 +48,14 @@ int main(int argc, char *argv[]) {
 * estrutura main_data.
 */
 void main_args(int argc, char* argv[], struct main_data* data){  
-    
-    data -> max_ops = atoi(argv[1]);
-    data -> buffers_size = atoi(argv[2]);
-    data -> n_restaurants = atoi(argv[3]);
-    data -> n_drivers = atoi(argv[4]);
-    data -> n_clients = atoi(argv[5]);
-    /*
     if(argc != 1){
-
-        //readFromFile(data,argv[1]);
+        lerFicheiro(data,argv[1]);
     }
     else{
         printf("Uso: magnaeats nomeDoFicheiroDeConfiguração\n");
         printf("Exemplo: ./bin/magnaeats path/okay.h \n");
         exit(1);
-    }*/
+    }
 }
 
 /* Função que reserva a memória dinâmica necessária para a execução
@@ -137,15 +129,15 @@ void user_interaction(struct communication_buffers* buffers, struct main_data* d
         scanf("%s", pedido);
 
 
-        if(strstr(pedido,"op") !=0){
-            create_request(&op_counter,buffers,data,sems);
+        if(strstr(pedido,"stop") !=0){
+            stop_execution(data,buffers,sems);
+            exit(1);
         }
         else if(strstr(pedido,"read") !=0){
             read_status(data,sems);
         }
-        else if(strstr(pedido,"stop") !=0){
-            stop_execution(data,buffers,sems);
-            exit(1);
+        else if(strstr(pedido,"op") !=0){
+            create_request(&op_counter,buffers,data,sems);
         }
         else if(strstr(pedido,"help") !=0){
             printf("Operações possiveis:\n");
@@ -220,7 +212,23 @@ void create_request(int* op_counter, struct communication_buffers* buffers, stru
 * e os ids do restaurante, motorista, e cliente que a receberam e processaram.
 */
 void read_status(struct main_data* data, struct semaphores* sems){
+    int id = 0;
+    scanf("%d",&id);
 
+    if(data->results[id].requested_dish == NULL){
+        printf("O id inserido não é válido!\n");
+    }
+    else{
+        printf("Pedido %d com estado %c requisitado pelo cliente %d ao restaurante %d com o prato %s, foi tratado pelo restaurante %d, encaminhado pelo motorista %d, e enviado ao cliente %d!\n",
+        id,
+        data->results[id].status,
+        data->results[id].requesting_client,
+        data->results[id].requested_rest,
+        data->results[id].requested_dish,
+        data->results[id].receiving_rest,
+        data->results[id].receiving_driver,
+        data->results[id].receiving_client);
+    }
 }
 
 /* Função que termina a execução do programa sovaccines. Deve começar por 
@@ -327,7 +335,22 @@ void create_semaphores(struct main_data* data, struct semaphores* sems){
 * máximo de processos que possam lá estar.
 */
 void wakeup_processes(struct main_data* data, struct semaphores* sems){
-
+    //não funciona para n_restaurants, n_drivers e n_clients
+    for(int i = 0; i<data->n_restaurants;i++){
+        produce_end(sems-> main_rest);
+        produce_end(sems-> rest_driv);
+        produce_end(sems -> driv_cli);
+    }
+    for(int i = 0; i<data->n_drivers;i++){
+        produce_end(sems-> main_rest);
+        produce_end(sems-> rest_driv);
+        produce_end(sems -> driv_cli);
+    }
+    for(int i = 0; i<data->n_clients;i++){
+        produce_end(sems-> main_rest);
+        produce_end(sems-> rest_driv);
+        produce_end(sems -> driv_cli);
+    }
 }
 
 /* Função que liberta todos os semáforos da estrutura semaphores.
