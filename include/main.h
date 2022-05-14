@@ -12,7 +12,10 @@ struct main_data {
 	int n_restaurants;		//número de restaurantes
 	int n_drivers;			//número de motoristas
 	int n_clients;			//número de clientes
-	
+	char log_filename [40];
+	char statistics_filename [40];
+	int alarm_time;
+
 	int *restaurant_pids;	//process ids de restaurantes
 	int *driver_pids;		//process ids de motoristas
 	int *client_pids;		//process ids de clientes
@@ -87,7 +90,7 @@ void read_status(struct main_data* data, struct semaphores* sems);
 * os semáforos e zonas de memória partilhada e dinâmica previamente 
 *reservadas. Para tal, pode usar as outras funções auxiliares do main.h.
 */
-void stop_execution(struct main_data* data, struct communication_buffers* buffers, struct semaphores* sems);
+void stop_execution(struct main_data* data, struct communication_buffers* buffers, struct semaphores* sems,int * op_counter);
 
 /* Função que espera que todos os processos previamente iniciados terminem,
 * incluindo restaurantes, motoristas e clientes. Para tal, pode usar a função 
@@ -98,7 +101,7 @@ void wait_processes(struct main_data* data);
 /* Função que imprime as estatisticas finais do MAGNAEATS, nomeadamente quantas
 * operações foram processadas por cada restaurante, motorista e cliente.
 */
-void write_statistics(struct main_data* data);
+void write_statistics(struct main_data* data,int * op_counter);
 
 /* Função que liberta todos os buffers de memória dinâmica e partilhada previamente
 * reservados na estrutura data.
