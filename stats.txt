@@ -9,11 +9,8 @@ Status: C
 Restaurant id: 0
 Driver id: 0
 Client id: 0
-Created: Sat May 14 21:29:53 2022
-Restaurant time: Sat May 14 21:29:53 2022
-Driver time: Sat May 14 21:29:53 2022
-Client time (end): Sat May 14 21:29:53 2022
-Total Tsime: Sat May 14 21:29:53 2022
-
-Request: 1
-Status: I
+Created: Sun May 15 00:56:54 2022
+Restaurant time: Sun May 15 00:56:54 2022
+Driver time: Sun May 15 00:56:54 2022
+Client time (end): Sun May 15 00:56:54 2022
+Total Time: 6

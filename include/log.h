@@ -1,12 +1,13 @@
 #ifndef LOG_H_GUARD
 #define LOG_H_GUARD
 
+#include <stdio.h>
 
-void createLogFile(char fileName[]);
+FILE * createLogFile(char * filename);
 
-void writeOperation(char * operation);
+void writeOperation(char * operation, FILE * log_file);
 
-void closeFile();
+void closeFile(FILE * log_file);
 
 
 #endif

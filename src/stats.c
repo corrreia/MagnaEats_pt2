@@ -54,20 +54,20 @@ void doStats(struct main_data* data, int op_counter){
             fputs("\n",out_file);
 
             fputs("Created: ",out_file);
-            fprintf(out_file,"%s",asctime(localtime( &data->results[i].start_time.tv_sec)));   
+            fprintf(out_file,"%s",asctime(localtime( &data->results[i].start_time.tv_sec)));   //falta millisegundos
 
             fputs("Restaurant time: ",out_file);
-            fprintf(out_file,"%s",asctime(localtime( &data->results[i].rest_time.tv_sec )));   
+            fprintf(out_file,"%s",asctime(localtime( &data->results[i].rest_time.tv_sec )));   //falta millisegundos
             
 
             fputs("Driver time: ",out_file);
-            fprintf(out_file,"%s",asctime(localtime( &data->results[i].driver_time.tv_sec )));   
+            fprintf(out_file,"%s",asctime(localtime( &data->results[i].driver_time.tv_sec )));   //falta millisegundos
 
             fputs("Client time (end): ",out_file);
-            fprintf(out_file,"%s",asctime(localtime( &data->results[i].client_end_time.tv_sec )));   
+            fprintf(out_file,"%s",asctime(localtime( &data->results[i].client_end_time.tv_sec )));   //falta millisegundos
             
-            fputs("Total Tsime: ",out_file);
-            fprintf(out_file,"%s",asctime(localtime( &data->results[i].client_end_time.tv_sec)));//falta fazer final -inicial
+            fputs("Total Time: ",out_file);
+            fprintf(out_file,"%ld",(( &data->results[i].client_end_time.tv_sec - &data->results[i].start_time.tv_sec ) + ( &data->results[i].client_end_time.tv_nsec - &data->results[i].start_time.tv_nsec )/ 1000000000L));//falta fazer final -inicial
             fputs("\n",out_file);
         }
         

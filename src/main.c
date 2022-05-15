@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "../include/main.h"
+#include "../include/log.h"
 #include "../include/memory.h"
 #include "../include/process.h"
 #include "../include/configuration.h"
@@ -120,6 +121,7 @@ void launch_processes(struct communication_buffers* buffers, struct main_data* d
 void user_interaction(struct communication_buffers* buffers, struct main_data* data, struct semaphores* sems){
     int op_counter = 0;
     char pedido [40];
+    FILE * log_file = createLogFile(data->log_filename);
 
     printf("Operações possiveis:\n");
     printf("        op client restaurant dish - criar um novo pedido\n");
@@ -134,13 +136,16 @@ void user_interaction(struct communication_buffers* buffers, struct main_data* d
 
         if(strstr(pedido,"stop") !=0){
             stop_execution(data,buffers,sems,&op_counter);
+            writeOperation("stop",log_file);
             exit(1);
         }
         else if(strstr(pedido,"read") !=0){
             read_status(data,sems);
+            writeOperation("read",log_file);
         }
         else if(strstr(pedido,"op") !=0){
             create_request(&op_counter,buffers,data,sems);
+            writeOperation("op",log_file);
         }
         else if(strstr(pedido,"help") !=0){
             printf("Operações possiveis:\n");
@@ -148,11 +153,13 @@ void user_interaction(struct communication_buffers* buffers, struct main_data* d
             printf("        status id - consultar o estado de um pedido\n");
             printf("        read - termina a execução do magnaeats.\n");
             printf("        help - imprime informação sobre as ações disponíveis.\n");
+            writeOperation("help",log_file);
         }
         else{
             printf("Ação não reconhecida, insira 'help' para assistência.\n");
         }
     }
+    closeFile(log_file);
 
 }
 
