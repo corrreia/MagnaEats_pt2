@@ -1,6 +1,7 @@
 #ifndef MAIN_H_GUARD
 #define MAIN_H_GUARD
 
+#include <stdio.h>
 #include "memory.h"
 #include "synchronization.h"
 
@@ -73,7 +74,7 @@ void user_interaction(struct communication_buffers* buffers, struct main_data* d
 * necessária sincronização antes e depois de escrever. Imprime o id da
 * operação e incrementa o contador de operações op_counter.
 */
-void create_request(int* op_counter, struct communication_buffers* buffers, struct main_data* data, struct semaphores* sems);
+void create_request(int* op_counter, struct communication_buffers* buffers, struct main_data* data, struct semaphores* sems, FILE * log_file);
 
 /* Função que lê um id de operação do utilizador e verifica se a mesma
 * é valida. Em caso afirmativo,
@@ -81,7 +82,7 @@ void create_request(int* op_counter, struct communication_buffers* buffers, stru
 * que fez o pedido, o id do restaurante requisitado, o nome do prato pedido
 * e os ids do restaurante, motorista, e cliente que a receberam e processaram.
 */
-void read_status(struct main_data* data, struct semaphores* sems);
+void read_status(struct main_data* data, struct semaphores* sems, FILE * log_file);
 
 /* Função que termina a execução do programa sovaccines. Deve começar por 
 * afetar a flag data->terminate com o valor 1. De seguida, e por esta

@@ -7,32 +7,33 @@ FILE * createLogFile(char * filename){
     return fopen (filename, "w");
 }
 
-void writeOperation(char * operation,FILE * log_file){
-    char * ptr = strtok(operation, " ");
+void writeRead(int op, FILE * log_file){
+    getTime(log_file);
+    fprintf(log_file,"%s %d\n","read",op);
+}
 
-    time_t rawtime;
-    struct tm *info;
-    time( &rawtime );
-    info = localtime( &rawtime );
+void writeStop(FILE * log_file){
+    getTime(log_file);
+    fprintf(log_file,"%s\n","stop");
+}
 
+void writeOp(int client_id,int restaurant_id,char * dish, FILE * log_file){
+    getTime(log_file);
+    fprintf(log_file,"%s %d %d %s\n","op", client_id, restaurant_id,dish);
 
-    if(strstr(operation,"stop") !=0){
-        fprintf(log_file,"%s",asctime(info));
-        fputs(" stop ",log_file);
-    }
-    else if(strstr(operation,"read") !=0){
-        fprintf(log_file,"%s",asctime(info));
-        fputs(" read ",log_file);
-        fprintf(log_file,"%s",ptr);
-    }
-    else if(strstr(operation,"op") !=0){
-        fprintf(log_file,"%s",asctime(info));
-        fputs(" Op ",log_file);
-    }
-    else if(strstr(operation,"help") !=0){
-        fprintf(log_file,"%s",asctime(info));
-        fputs("help ",log_file);
-    }
+}
+void writeHelp(FILE * log_file){
+    getTime(log_file);
+    fprintf(log_file,"%s\n","help");
+}
+
+void getTime(FILE * log_file){
+    struct timespec timer;
+    clock_gettime( CLOCK_REALTIME, &timer);
+    char t [40];
+    strftime(t,40,"%F %X",localtime(&timer.tv_sec));
+
+    fprintf(log_file,"%s.%ld ",t,timer.tv_nsec/1000000);
 }
 
 void closeFile(FILE * log_file){

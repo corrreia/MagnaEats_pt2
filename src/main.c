@@ -136,24 +136,23 @@ void user_interaction(struct communication_buffers* buffers, struct main_data* d
 
         if(strstr(pedido,"stop") !=0){
             stop_execution(data,buffers,sems,&op_counter);
-            writeOperation("stop",log_file);
+            writeStop(log_file);
             exit(1);
         }
         else if(strstr(pedido,"read") !=0){
-            read_status(data,sems);
-            writeOperation("read",log_file);
+            read_status(data,sems,log_file);
+
         }
         else if(strstr(pedido,"op") !=0){
-            create_request(&op_counter,buffers,data,sems);
-            writeOperation("op",log_file);
+            create_request(&op_counter,buffers,data,sems,log_file);
         }
         else if(strstr(pedido,"help") !=0){
             printf("Operações possiveis:\n");
             printf("        op client restaurant dish - criar um novo pedido\n");
-            printf("        status id - consultar o estado de um pedido\n");
-            printf("        read - termina a execução do magnaeats.\n");
+            printf("        read id - consultar o estado de um pedido\n");
+            printf("        stop - termina a execução do magnaeats.\n");
             printf("        help - imprime informação sobre as ações disponíveis.\n");
-            writeOperation("help",log_file);
+            writeHelp(log_file);
         }
         else{
             printf("Ação não reconhecida, insira 'help' para assistência.\n");
@@ -169,13 +168,15 @@ void user_interaction(struct communication_buffers* buffers, struct main_data* d
 * necessária sincronização antes e depois de escrever. Imprime o id da
 * operação e incrementa o contador de operações op_counter.
 */
-void create_request(int* op_counter, struct communication_buffers* buffers, struct main_data* data, struct semaphores* sems){
+void create_request(int* op_counter, struct communication_buffers* buffers, struct main_data* data, struct semaphores* sems,FILE * log_file){
     int client_ID;
     int restaurant_ID;
     char *dish = (char*) malloc(20);
     scanf("%d",&client_ID);
     scanf("%d",&restaurant_ID);
     scanf("%s",dish);
+
+    writeOp(client_ID,restaurant_ID,dish,log_file);
 
     if(*op_counter < data->max_ops){ 
         struct operation op = {
@@ -221,10 +222,10 @@ void create_request(int* op_counter, struct communication_buffers* buffers, stru
 * que fez o pedido, o id do restaurante requisitado, o nome do prato pedido
 * e os ids do restaurante, motorista, e cliente que a receberam e processaram.
 */
-void read_status(struct main_data* data, struct semaphores* sems){
+void read_status(struct main_data* data, struct semaphores* sems,FILE * log_file){
     int id = 0;
     scanf("%d",&id);
-
+    writeRead(id,log_file);
     if(data->results[id].requested_dish == NULL){
         printf("O id inserido não é válido!\n");
     }
