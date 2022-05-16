@@ -2,11 +2,13 @@
 #include <stdlib.h>
 #include <string.h>
 #include "../include/main.h"
+#include "../include/log.h"
 #include "../include/memory.h"
 #include "../include/process.h"
 #include "../include/configuration.h"
 #include "../include/synchronization.h"
 #include "../include/metime.h"
+#include "../include/stats.h"
 
 
 int main(int argc, char *argv[]) {
@@ -50,6 +52,7 @@ int main(int argc, char *argv[]) {
 void main_args(int argc, char* argv[], struct main_data* data){  
     if(argc != 1){
         lerFicheiro(data,argv[1]);
+        printf("%s\n", data -> log_filename);
     }
     else{
         printf("Uso: magnaeats nomeDoFicheiroDeConfiguração\n");
@@ -118,6 +121,8 @@ void launch_processes(struct communication_buffers* buffers, struct main_data* d
 void user_interaction(struct communication_buffers* buffers, struct main_data* data, struct semaphores* sems){
     int op_counter = 0;
     char pedido [40];
+    FILE * log_file = createLogFile(data->log_filename);
+
     printf("Operações possiveis:\n");
     printf("        op client restaurant dish - criar um novo pedido\n");
     printf("        read id - consultar o estado de um pedido\n");
@@ -130,26 +135,30 @@ void user_interaction(struct communication_buffers* buffers, struct main_data* d
 
 
         if(strstr(pedido,"stop") !=0){
-            stop_execution(data,buffers,sems);
+            stop_execution(data,buffers,sems,&op_counter);
+            writeStop(log_file);
             exit(1);
         }
         else if(strstr(pedido,"read") !=0){
-            read_status(data,sems);
+            read_status(data,sems,log_file);
+
         }
         else if(strstr(pedido,"op") !=0){
-            create_request(&op_counter,buffers,data,sems);
+            create_request(&op_counter,buffers,data,sems,log_file);
         }
         else if(strstr(pedido,"help") !=0){
             printf("Operações possiveis:\n");
             printf("        op client restaurant dish - criar um novo pedido\n");
-            printf("        status id - consultar o estado de um pedido\n");
-            printf("        read - termina a execução do magnaeats.\n");
+            printf("        read id - consultar o estado de um pedido\n");
+            printf("        stop - termina a execução do magnaeats.\n");
             printf("        help - imprime informação sobre as ações disponíveis.\n");
+            writeHelp(log_file);
         }
         else{
             printf("Ação não reconhecida, insira 'help' para assistência.\n");
         }
     }
+    closeFile(log_file);
 
 }
 
@@ -159,13 +168,15 @@ void user_interaction(struct communication_buffers* buffers, struct main_data* d
 * necessária sincronização antes e depois de escrever. Imprime o id da
 * operação e incrementa o contador de operações op_counter.
 */
-void create_request(int* op_counter, struct communication_buffers* buffers, struct main_data* data, struct semaphores* sems){
+void create_request(int* op_counter, struct communication_buffers* buffers, struct main_data* data, struct semaphores* sems,FILE * log_file){
     int client_ID;
     int restaurant_ID;
     char *dish = (char*) malloc(20);
     scanf("%d",&client_ID);
     scanf("%d",&restaurant_ID);
     scanf("%s",dish);
+
+    writeOp(client_ID,restaurant_ID,dish,log_file);
 
     if(*op_counter < data->max_ops){ 
         struct operation op = {
@@ -211,10 +222,10 @@ void create_request(int* op_counter, struct communication_buffers* buffers, stru
 * que fez o pedido, o id do restaurante requisitado, o nome do prato pedido
 * e os ids do restaurante, motorista, e cliente que a receberam e processaram.
 */
-void read_status(struct main_data* data, struct semaphores* sems){
+void read_status(struct main_data* data, struct semaphores* sems,FILE * log_file){
     int id = 0;
     scanf("%d",&id);
-
+    writeRead(id,log_file);
     if(data->results[id].requested_dish == NULL){
         printf("O id inserido não é válido!\n");
     }
@@ -238,11 +249,11 @@ void read_status(struct main_data* data, struct semaphores* sems){
 * os semáforos e zonas de memória partilhada e dinâmica previamente 
 *reservadas. Para tal, pode usar as outras funções auxiliares do main.h.
 */
-void stop_execution(struct main_data* data, struct communication_buffers* buffers, struct semaphores* sems){
+void stop_execution(struct main_data* data, struct communication_buffers* buffers, struct semaphores* sems,int * op_counter){
     *data->terminate = 1;
     wakeup_processes(data,sems);
     wait_processes(data);
-    write_statistics(data);
+    write_statistics(data,op_counter);
     destroy_semaphores(sems);
     destroy_memory_buffers(data,buffers);
 }
@@ -266,7 +277,7 @@ void wait_processes(struct main_data* data){
 /* Função que imprime as estatisticas finais do MAGNAEATS, nomeadamente quantas
 * operações foram processadas por cada restaurante, motorista e cliente.
 */
-void write_statistics(struct main_data* data){
+void write_statistics(struct main_data* data, int * op_counter){
     for(int i = 0; i< data->n_restaurants;i++){
         printf("Restaurante %d preparou %d pedidos!\n",i,data->restaurant_stats[i]);     
     }
@@ -276,6 +287,7 @@ void write_statistics(struct main_data* data){
     for(int i = 0; i< data->n_clients;i++){
        printf("Cliente %d recebeu %d pedidos!\n",i,(data->client_stats[i]));
     }
+    doStats(data,*op_counter);
 }
 
 /* Função que liberta todos os buffers de memória dinâmica e partilhada previamente

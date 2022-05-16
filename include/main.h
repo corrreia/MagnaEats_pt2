@@ -1,6 +1,7 @@
 #ifndef MAIN_H_GUARD
 #define MAIN_H_GUARD
 
+#include <stdio.h>
 #include "memory.h"
 #include "synchronization.h"
 
@@ -12,7 +13,10 @@ struct main_data {
 	int n_restaurants;		//número de restaurantes
 	int n_drivers;			//número de motoristas
 	int n_clients;			//número de clientes
-	
+	char log_filename [40];
+	char statistics_filename [40];
+	int alarm_time;
+
 	int *restaurant_pids;	//process ids de restaurantes
 	int *driver_pids;		//process ids de motoristas
 	int *client_pids;		//process ids de clientes
@@ -70,7 +74,7 @@ void user_interaction(struct communication_buffers* buffers, struct main_data* d
 * necessária sincronização antes e depois de escrever. Imprime o id da
 * operação e incrementa o contador de operações op_counter.
 */
-void create_request(int* op_counter, struct communication_buffers* buffers, struct main_data* data, struct semaphores* sems);
+void create_request(int* op_counter, struct communication_buffers* buffers, struct main_data* data, struct semaphores* sems, FILE * log_file);
 
 /* Função que lê um id de operação do utilizador e verifica se a mesma
 * é valida. Em caso afirmativo,
@@ -78,7 +82,7 @@ void create_request(int* op_counter, struct communication_buffers* buffers, stru
 * que fez o pedido, o id do restaurante requisitado, o nome do prato pedido
 * e os ids do restaurante, motorista, e cliente que a receberam e processaram.
 */
-void read_status(struct main_data* data, struct semaphores* sems);
+void read_status(struct main_data* data, struct semaphores* sems, FILE * log_file);
 
 /* Função que termina a execução do programa sovaccines. Deve começar por 
 * afetar a flag data->terminate com o valor 1. De seguida, e por esta
@@ -87,7 +91,7 @@ void read_status(struct main_data* data, struct semaphores* sems);
 * os semáforos e zonas de memória partilhada e dinâmica previamente 
 *reservadas. Para tal, pode usar as outras funções auxiliares do main.h.
 */
-void stop_execution(struct main_data* data, struct communication_buffers* buffers, struct semaphores* sems);
+void stop_execution(struct main_data* data, struct communication_buffers* buffers, struct semaphores* sems,int * op_counter);
 
 /* Função que espera que todos os processos previamente iniciados terminem,
 * incluindo restaurantes, motoristas e clientes. Para tal, pode usar a função 
@@ -98,7 +102,7 @@ void wait_processes(struct main_data* data);
 /* Função que imprime as estatisticas finais do MAGNAEATS, nomeadamente quantas
 * operações foram processadas por cada restaurante, motorista e cliente.
 */
-void write_statistics(struct main_data* data);
+void write_statistics(struct main_data* data,int * op_counter);
 
 /* Função que liberta todos os buffers de memória dinâmica e partilhada previamente
 * reservados na estrutura data.

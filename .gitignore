@@ -1,9 +1,6 @@
-*.o
-*.out
-
-bin/
-obj/
 .vscode/
 .idea/
+
+obj/
 testes/
 magnaeats 
