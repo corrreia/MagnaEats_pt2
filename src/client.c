@@ -36,9 +36,9 @@ int execute_client(int client_id, struct communication_buffers* buffers, struct 
 */
 void client_get_operation(struct operation* op, int client_id, struct communication_buffers* buffers, struct main_data* data, struct semaphores* sems){
     if(*(data -> terminate) == 1) return;
-    consume_begin(sems->driv_cli);
+    //consume_begin(sems->driv_cli);
     read_driver_client_buffer(buffers->driv_cli,client_id,data -> buffers_size,op);
-    consume_end(sems->driv_cli);
+    //consume_end(sems->driv_cli);
 }
 
 /* Função que processa uma operação, alterando o seu campo receiving_client para o id
@@ -51,5 +51,7 @@ void client_process_operation(struct operation* op, int client_id, struct main_d
     registarTempo(&op->client_end_time);
     //Será que é o mutex do results??
     *counter = *counter + 1;
+    semaphore_mutex_unlock(sems->results_mutex);
     data -> results[op -> id] = *op;
+    semaphore_mutex_lock(sems->results_mutex);
 }

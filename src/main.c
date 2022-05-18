@@ -59,6 +59,70 @@ void main_args(int argc, char* argv[], struct main_data* data){
         exit(1);
     }
 }
+/* Função que faz interação do utilizador, podendo receber 4 comandos:
+* op - cria uma nova operação, através da função create_request
+* read - verifica o estado de uma operação através da função read_answer
+* stop - termina o execução do sovaccines através da função stop_execution
+* help - imprime informação sobre os comandos disponiveis
+*/
+void user_interaction(struct communication_buffers* buffers, struct main_data* data, struct semaphores* sems){
+    int op_counter = 0;
+    char pedido [40];
+
+    printf("Operações possiveis:\n");
+    printf("        op client restaurant dish - criar um novo pedido\n");
+    printf("        read id - consultar o estado de um pedido\n");
+    printf("        stop - termina a execução do magnaeats.\n");
+    printf("        help - imprime informação sobre as ações disponíveis.\n");
+
+    while(1){
+        printf("Introduzir comando:\n");
+        scanf("%s", pedido);
+
+
+        if(strstr(pedido,"stop") !=0){
+            setOpCounter(op_counter);
+            writeStop();
+            stop_execution(data,buffers,sems);
+            exit(1);
+        }
+        else if(strstr(pedido,"read") !=0){
+            read_status(data,sems);
+
+        }
+        else if(strstr(pedido,"op") !=0){
+            create_request(&op_counter,buffers,data,sems);
+        }
+        else if(strstr(pedido,"help") !=0){
+            printf("Operações possiveis:\n");
+            printf("        op client restaurant dish - criar um novo pedido\n");
+            printf("        read id - consultar o estado de um pedido\n");
+            printf("        stop - termina a execução do magnaeats.\n");
+            printf("        help - imprime informação sobre as ações disponíveis.\n");
+            writeHelp();
+        }
+        else{
+            printf("Ação não reconhecida, insira 'help' para assistência.\n");
+        }
+    }
+
+}
+
+/* Função que inicia os processos dos restuarantes, motoristas e clientes. Para tal, pode
+* usar a função launch_process, guardando os pids resultantes nos arrays respetivos
+* da estrutura data.
+*/
+void launch_processes(struct communication_buffers* buffers, struct main_data* data, struct semaphores* sems){
+    for(int i = 0; i< data->n_restaurants;i++){
+        data->driver_pids[i] = launch_restaurant(i,buffers,data,sems);       
+    }
+    for(int i = 0; i< data->n_drivers;i++){
+        data->client_pids[i] = launch_driver(i,buffers,data,sems);
+    }
+    for(int i = 0; i< data->n_clients;i++){
+        data->restaurant_pids[i] = launch_client(i,buffers,data,sems);
+    }
+}
 
 /* Função que reserva a memória dinâmica necessária para a execução
 * do MAGNAEATS, nomeadamente para os arrays *_pids e *_stats da estrutura 
@@ -95,71 +159,7 @@ void create_shared_memory_buffers(struct main_data* data, struct communication_b
 }
 
 
-/* Função que inicia os processos dos restuarantes, motoristas e clientes. Para tal, pode
-* usar a função launch_process, guardando os pids resultantes nos arrays respetivos
-* da estrutura data.
-*/
-void launch_processes(struct communication_buffers* buffers, struct main_data* data, struct semaphores* sems){
-    for(int i = 0; i< data->n_restaurants;i++){
-        data->driver_pids[i] = launch_restaurant(i,buffers,data,sems);       
-    }
-    for(int i = 0; i< data->n_drivers;i++){
-        data->client_pids[i] = launch_driver(i,buffers,data,sems);
-    }
-    for(int i = 0; i< data->n_clients;i++){
-        data->restaurant_pids[i] = launch_client(i,buffers,data,sems);
-    }
-}
 
-/* Função que faz interação do utilizador, podendo receber 4 comandos:
-* op - cria uma nova operação, através da função create_request
-* read - verifica o estado de uma operação através da função read_answer
-* stop - termina o execução do sovaccines através da função stop_execution
-* help - imprime informação sobre os comandos disponiveis
-*/
-void user_interaction(struct communication_buffers* buffers, struct main_data* data, struct semaphores* sems){
-    int op_counter = 0;
-    char pedido [40];
-
-    printf("Operações possiveis:\n");
-    printf("        op client restaurant dish - criar um novo pedido\n");
-    printf("        read id - consultar o estado de um pedido\n");
-    printf("        stop - termina a execução do magnaeats.\n");
-    printf("        help - imprime informação sobre as ações disponíveis.\n");
-
-    while(1){
-        printf("Introduzir comando:\n");
-        scanf("%s", pedido);
-
-
-        if(strstr(pedido,"stop") !=0){
-            //tive que retirar do sitio para aqui pois estava a escrever errado
-            setOpCounter(op_counter);
-            writeStop();
-            stop_execution(data,buffers,sems);
-            exit(1);
-        }
-        else if(strstr(pedido,"read") !=0){
-            read_status(data,sems);
-
-        }
-        else if(strstr(pedido,"op") !=0){
-            create_request(&op_counter,buffers,data,sems);
-        }
-        else if(strstr(pedido,"help") !=0){
-            printf("Operações possiveis:\n");
-            printf("        op client restaurant dish - criar um novo pedido\n");
-            printf("        read id - consultar o estado de um pedido\n");
-            printf("        stop - termina a execução do magnaeats.\n");
-            printf("        help - imprime informação sobre as ações disponíveis.\n");
-            writeHelp();
-        }
-        else{
-            printf("Ação não reconhecida, insira 'help' para assistência.\n");
-        }
-    }
-
-}
 
 /* Se o limite de operações ainda não tiver sido atingido, cria uma nova
 * operação identificada pelo valor atual de op_counter, escrevendo a mesma
@@ -180,8 +180,8 @@ void create_request(int* op_counter, struct communication_buffers* buffers, stru
     if(*op_counter < data->max_ops){ 
         struct operation op = {
             *op_counter,
-            client_ID,
             restaurant_ID,
+            client_ID,
             NULL,
             'I',
             0,
@@ -191,20 +191,23 @@ void create_request(int* op_counter, struct communication_buffers* buffers, stru
             0,
             0,
             0
-        };//falta meter tempos
+        };
+
         registarTempo(&op.start_time);
+
         op.requested_dish = (char*) create_dynamic_memory(20);
         strcpy(op.requested_dish,dish);
 
         printf("O pedido #%d foi criado!\n", *op_counter);
 
+        semaphore_mutex_unlock(sems->results_mutex);
         memcpy(&data->results[*op_counter],&op,sizeof(struct operation));
+        semaphore_mutex_lock(sems->results_mutex);
 
 
         produce_begin(sems->main_rest);   
         write_main_rest_buffer(buffers -> main_rest,data -> buffers_size,&op);
         produce_end(sems->main_rest);
-        printf("okay\n");
         
 
         *op_counter = *op_counter + 1;
@@ -224,7 +227,9 @@ void create_request(int* op_counter, struct communication_buffers* buffers, stru
 void read_status(struct main_data* data, struct semaphores* sems){
     int id = 0;
     scanf("%d",&id);
+
     writeRead(id);
+
     if(data->results[id].requested_dish == NULL){
         printf("O id inserido não é válido!\n");
     }
@@ -249,7 +254,6 @@ void read_status(struct main_data* data, struct semaphores* sems){
 *reservadas. Para tal, pode usar as outras funções auxiliares do main.h.
 */
 void stop_execution(struct main_data* data, struct communication_buffers* buffers, struct semaphores* sems){
-    //não faz sentido pois temos de abrir um ficheiro e rescrever o que já foi escrito
     *data->terminate = 1;
     wakeup_processes(data,sems);
     wait_processes(data);
@@ -338,6 +342,8 @@ void create_semaphores(struct main_data* data, struct semaphores* sems){
     sems-> driv_cli -> empty = semaphore_create(STR_SEM_DRIV_CLI_EMPTY,data->buffers_size);
     sems-> driv_cli -> mutex = semaphore_create(STR_SEM_DRIV_CLI_MUTEX,1);
 
+    sems->results_mutex = semaphore_create(STR_SEM_RESULTS_MUTEX,1);
+
     //Falta criar um no results
 }
 
@@ -380,6 +386,8 @@ void destroy_semaphores(struct semaphores* sems){
     semaphore_destroy(STR_SEM_DRIV_CLI_FULL,sems-> driv_cli -> full);
     semaphore_destroy(STR_SEM_DRIV_CLI_EMPTY,sems-> driv_cli -> empty);
     semaphore_destroy(STR_SEM_DRIV_CLI_MUTEX,sems-> driv_cli -> mutex);
+
+    semaphore_destroy(STR_SEM_RESULTS_MUTEX,sems-> results_mutex);
 
     //Falta retirar um no results
 }

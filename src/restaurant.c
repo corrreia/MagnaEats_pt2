@@ -47,9 +47,9 @@ int execute_restaurant(int rest_id, struct communication_buffers* buffers, struc
 void restaurant_receive_operation(struct operation* op, int rest_id, struct communication_buffers* buffers, struct main_data* data, struct semaphores* sems)
 {
     if(*(data -> terminate) == 1) return;
-    consume_begin(sems->main_rest);
+    //consume_begin(sems->main_rest);
     read_main_rest_buffer(buffers->main_rest,rest_id,data -> buffers_size,op);
-    consume_end(sems->main_rest);
+    //consume_end(sems->main_rest);
 }
 
 
@@ -61,8 +61,9 @@ void restaurant_process_operation(struct operation* op, int rest_id, struct main
     op -> receiving_rest = rest_id;
     op -> status = 'R';
     registarTempo(&op->rest_time); //testar
-    //Será que é o mutex do results??
+    semaphore_mutex_unlock(sems->results_mutex);
     data -> results[op -> id] = *op;
+    semaphore_mutex_lock(sems->results_mutex);
     *counter = *counter + 1;
 }
 
