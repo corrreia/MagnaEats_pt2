@@ -5,6 +5,6 @@
 
 void createAlarm(int alarmTime);
 
-void doAlarm(struct *operation results);
+//void doAlarm(struct *operation results);
 
 #endif

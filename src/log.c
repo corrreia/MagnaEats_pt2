@@ -3,31 +3,33 @@
 #include <string.h>
 #include <time.h>
 
-FILE * createLogFile(char * filename){
-    return fopen (filename, "w");
+FILE * log_file;
+
+void createLogFile(char * filename){
+    log_file =  fopen (filename, "w");
 }
 
-void writeRead(int op, FILE * log_file){
-    getTime(log_file);
+void writeRead(int op){
+    getTime();
     fprintf(log_file,"%s %d\n","read",op);
 }
 
-void writeStop(FILE * log_file){
-    getTime(log_file);
+void writeStop(){
+    getTime();
     fprintf(log_file,"%s\n","stop");
 }
 
-void writeOp(int client_id,int restaurant_id,char * dish, FILE * log_file){
+void writeOp(int client_id,int restaurant_id,char * dish){
     getTime(log_file);
     fprintf(log_file,"%s %d %d %s\n","op", client_id, restaurant_id,dish);
 
 }
-void writeHelp(FILE * log_file){
+void writeHelp(){
     getTime(log_file);
     fprintf(log_file,"%s\n","help");
 }
 
-void getTime(FILE * log_file){
+void getTime(){
     struct timespec timer;
     clock_gettime( CLOCK_REALTIME, &timer);
     char t [40];
@@ -36,6 +38,6 @@ void getTime(FILE * log_file){
     fprintf(log_file,"%s.%ld ",t,timer.tv_nsec/1000000);
 }
 
-void closeFile(FILE * log_file){
+void closeFile(){
     closeFile(log_file);
 }

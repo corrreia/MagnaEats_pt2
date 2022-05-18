@@ -18,8 +18,8 @@ Process Statistics:
         Motorista 6 entregou 0 pedidos!
         Motorista 7 entregou 0 pedidos!
         Motorista 8 entregou 0 pedidos!
-        Motorista 9 entregou 1 pedidos!
-        Cliente 0 recebeu 2 pedidos!
+        Motorista 9 entregou 0 pedidos!
+        Cliente 0 recebeu 1 pedidos!
         Cliente 1 recebeu 0 pedidos!
         Cliente 2 recebeu 0 pedidos!
         Cliente 3 recebeu 0 pedidos!
@@ -36,11 +36,9 @@ Status: C
 Restaurant id: 0
 Driver id: 0
 Client id: 0
-Created: 2022-05-17 00:39:19.834
-Restaurant time: 2022-05-17 00:39:19.835
-Driver time: 2022-05-17 00:39:19.835
-Client time (end): 2022-05-17 00:39:19.835
-Total Time: 0.0 s (376900 ns)
+Created: 2022-05-18 19:23:35.714
+Restaurant time: 2022-05-18 19:23:35.714
+Driver time: 2022-05-18 19:23:35.714
+Client time (end): 2022-05-18 19:23:35.714
+Total Time: 0.0 s (459200 ns)
 
-Request: 1
-Status: D

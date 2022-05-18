@@ -3,6 +3,9 @@
 #include <stdlib.h>
 #include "../include/configuration.h"
 #include "../include/main.h"
+#include "../include/log.h"
+#include "../include/stats.h"
+#include "../include/mesignal.h"
 
 
 void lerFicheiro(struct main_data* data, char fileName[]){
@@ -16,9 +19,10 @@ void lerFicheiro(struct main_data* data, char fileName[]){
     fscanf(in_file,"%d",  &data -> n_drivers);
     fscanf(in_file,"%d",  &data -> n_clients);
 
-    char ts [30];   //talvez alterar?
+    char ts [30];
     fscanf(in_file,"%s", ts);
-    strcpy(data -> log_filename,ts);
+    createLogFile(ts);
+    //strcpy(data -> log_filename,ts);
 
     char t1 [30];  //talvez alterar?
     fscanf(in_file,"%s",  t1);

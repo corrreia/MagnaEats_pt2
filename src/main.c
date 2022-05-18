@@ -52,7 +52,6 @@ int main(int argc, char *argv[]) {
 void main_args(int argc, char* argv[], struct main_data* data){  
     if(argc != 1){
         lerFicheiro(data,argv[1]);
-        printf("%s\n", data -> log_filename);
     }
     else{
         printf("Uso: magnaeats nomeDoFicheiroDeConfiguração\n");
@@ -121,7 +120,6 @@ void launch_processes(struct communication_buffers* buffers, struct main_data* d
 void user_interaction(struct communication_buffers* buffers, struct main_data* data, struct semaphores* sems){
     int op_counter = 0;
     char pedido [40];
-    FILE * log_file = createLogFile(data->log_filename);
 
     printf("Operações possiveis:\n");
     printf("        op client restaurant dish - criar um novo pedido\n");
@@ -136,15 +134,15 @@ void user_interaction(struct communication_buffers* buffers, struct main_data* d
 
         if(strstr(pedido,"stop") !=0){
             stop_execution(data,buffers,sems,&op_counter);
-            writeStop(log_file);
+            writeStop();
             exit(1);
         }
         else if(strstr(pedido,"read") !=0){
-            read_status(data,sems,log_file);
+            read_status(data,sems);
 
         }
         else if(strstr(pedido,"op") !=0){
-            create_request(&op_counter,buffers,data,sems,log_file);
+            create_request(&op_counter,buffers,data,sems);
         }
         else if(strstr(pedido,"help") !=0){
             printf("Operações possiveis:\n");
@@ -152,13 +150,12 @@ void user_interaction(struct communication_buffers* buffers, struct main_data* d
             printf("        read id - consultar o estado de um pedido\n");
             printf("        stop - termina a execução do magnaeats.\n");
             printf("        help - imprime informação sobre as ações disponíveis.\n");
-            writeHelp(log_file);
+            writeHelp();
         }
         else{
             printf("Ação não reconhecida, insira 'help' para assistência.\n");
         }
     }
-    closeFile(log_file);
 
 }
 
@@ -168,7 +165,7 @@ void user_interaction(struct communication_buffers* buffers, struct main_data* d
 * necessária sincronização antes e depois de escrever. Imprime o id da
 * operação e incrementa o contador de operações op_counter.
 */
-void create_request(int* op_counter, struct communication_buffers* buffers, struct main_data* data, struct semaphores* sems,FILE * log_file){
+void create_request(int* op_counter, struct communication_buffers* buffers, struct main_data* data, struct semaphores* sems){
     int client_ID;
     int restaurant_ID;
     char *dish = (char*) malloc(20);
@@ -176,7 +173,7 @@ void create_request(int* op_counter, struct communication_buffers* buffers, stru
     scanf("%d",&restaurant_ID);
     scanf("%s",dish);
 
-    writeOp(client_ID,restaurant_ID,dish,log_file);
+    writeOp(client_ID,restaurant_ID,dish);
 
     if(*op_counter < data->max_ops){ 
         struct operation op = {
@@ -222,10 +219,10 @@ void create_request(int* op_counter, struct communication_buffers* buffers, stru
 * que fez o pedido, o id do restaurante requisitado, o nome do prato pedido
 * e os ids do restaurante, motorista, e cliente que a receberam e processaram.
 */
-void read_status(struct main_data* data, struct semaphores* sems,FILE * log_file){
+void read_status(struct main_data* data, struct semaphores* sems){
     int id = 0;
     scanf("%d",&id);
-    writeRead(id,log_file);
+    writeRead(id);
     if(data->results[id].requested_dish == NULL){
         printf("O id inserido não é válido!\n");
     }
