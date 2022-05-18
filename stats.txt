@@ -1,5 +1,5 @@
 Process Statistics:
-        Restaurante 0 preparou 2 pedidos!
+        Restaurante 0 preparou 0 pedidos!
         Restaurante 1 preparou 0 pedidos!
         Restaurante 2 preparou 0 pedidos!
         Restaurante 3 preparou 0 pedidos!
@@ -9,18 +9,18 @@ Process Statistics:
         Restaurante 7 preparou 0 pedidos!
         Restaurante 8 preparou 0 pedidos!
         Restaurante 9 preparou 0 pedidos!
-        Motorista 0 entregou 2 pedidos!
-        Motorista 1 entregou 1 pedidos!
-        Motorista 2 entregou 1 pedidos!
-        Motorista 3 entregou 1 pedidos!
+        Motorista 0 entregou 0 pedidos!
+        Motorista 1 entregou 0 pedidos!
+        Motorista 2 entregou 0 pedidos!
+        Motorista 3 entregou 0 pedidos!
         Motorista 4 entregou 0 pedidos!
         Motorista 5 entregou 0 pedidos!
         Motorista 6 entregou 0 pedidos!
         Motorista 7 entregou 0 pedidos!
         Motorista 8 entregou 0 pedidos!
         Motorista 9 entregou 0 pedidos!
-        Cliente 0 recebeu 2 pedidos!
-        Cliente 1 recebeu 2 pedidos!
+        Cliente 0 recebeu 0 pedidos!
+        Cliente 1 recebeu 0 pedidos!
         Cliente 2 recebeu 0 pedidos!
         Cliente 3 recebeu 0 pedidos!
         Cliente 4 recebeu 0 pedidos!
@@ -36,26 +36,11 @@ Status: C
 Restaurant id: 0
 Driver id: 0
 Client id: 0
-Created: 2022-05-18 19:56:50.175
-Restaurant time: 2022-05-18 19:56:50.175
-Driver time: 2022-05-18 19:56:50.175
-Client time (end): 2022-05-18 19:56:50.175
-Total Time: 0.0 s (360300 ns)
+Created: 2022-05-18 21:28:12.567
+Restaurant time: 2022-05-18 21:28:12.567
+Driver time: 2022-05-18 21:28:12.567
+Client time (end): 2022-05-18 21:28:12.567
+Total Time: 0.0 s (470600 ns)
 
 Request: 1
-Status: C
-Restaurant id: 1
-Driver id: 1
-Client id: 0
-Created: 2022-05-18 19:56:54.266
-Restaurant time: 2022-05-18 19:56:54.266
-Driver time: 2022-05-18 19:56:54.266
-Client time (end): 2022-05-18 19:57:21.711
-Total Time: 27.445 s (445877200 ns)
-
-Request: 2
-Status: D
-Request: 3
-Status: R
-Request: 4
-Status: D
+Status: I

@@ -133,8 +133,9 @@ void user_interaction(struct communication_buffers* buffers, struct main_data* d
 
 
         if(strstr(pedido,"stop") !=0){
-            stop_execution(data,buffers,sems,&op_counter);
+            doStats(data,op_counter);
             writeStop();
+            stop_execution(data,buffers,sems);
             exit(1);
         }
         else if(strstr(pedido,"read") !=0){
@@ -246,11 +247,12 @@ void read_status(struct main_data* data, struct semaphores* sems){
 * os semáforos e zonas de memória partilhada e dinâmica previamente 
 *reservadas. Para tal, pode usar as outras funções auxiliares do main.h.
 */
-void stop_execution(struct main_data* data, struct communication_buffers* buffers, struct semaphores* sems,int * op_counter){
+void stop_execution(struct main_data* data, struct communication_buffers* buffers, struct semaphores* sems){
     *data->terminate = 1;
     wakeup_processes(data,sems);
     wait_processes(data);
-    write_statistics(data,op_counter);
+    write_statistics(data);
+    closeStatsFile();
     destroy_semaphores(sems);
     destroy_memory_buffers(data,buffers);
 }
@@ -274,7 +276,7 @@ void wait_processes(struct main_data* data){
 /* Função que imprime as estatisticas finais do MAGNAEATS, nomeadamente quantas
 * operações foram processadas por cada restaurante, motorista e cliente.
 */
-void write_statistics(struct main_data* data, int * op_counter){
+void write_statistics(struct main_data* data){
     for(int i = 0; i< data->n_restaurants;i++){
         printf("Restaurante %d preparou %d pedidos!\n",i,data->restaurant_stats[i]);     
     }
@@ -284,7 +286,6 @@ void write_statistics(struct main_data* data, int * op_counter){
     for(int i = 0; i< data->n_clients;i++){
        printf("Cliente %d recebeu %d pedidos!\n",i,(data->client_stats[i]));
     }
-    doStats(data,*op_counter);
 }
 
 /* Função que liberta todos os buffers de memória dinâmica e partilhada previamente

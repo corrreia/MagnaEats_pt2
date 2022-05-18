@@ -3,8 +3,13 @@
 #include <stdlib.h>
 #include <time.h>
 
+FILE * out_file;
+
+void createStatsFile(char * fileName){
+    out_file = fopen (fileName, "w"); 
+}
+
 void doStats(struct main_data* data, int op_counter){
-    FILE * out_file = fopen (data -> statistics_filename, "w"); 
     fputs("Process Statistics:\n",out_file);
     for(int i = 0; i< data->n_restaurants;i++){
         fputs("        Restaurante ",out_file);
@@ -79,5 +84,8 @@ void doStats(struct main_data* data, int op_counter){
             (data->results[i].client_end_time.tv_nsec - data->results[i].start_time.tv_nsec));
         }
     }
+}
+
+void closeStatsFile(){
     fclose(out_file);
 }

@@ -26,7 +26,8 @@ void lerFicheiro(struct main_data* data, char fileName[]){
 
     char t1 [30];  //talvez alterar?
     fscanf(in_file,"%s",  t1);
-    strcpy(data -> statistics_filename,t1);
+    createStatsFile(t1);
+    //strcpy(data -> statistics_filename,t1);
 
     fscanf(in_file,"%d",  &data -> alarm_time);
 
