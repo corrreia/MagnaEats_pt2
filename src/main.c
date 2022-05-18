@@ -133,6 +133,11 @@ void user_interaction(struct communication_buffers* buffers, struct main_data* d
 
 
         if(strstr(pedido,"stop") !=0){
+            //tive que retirar do sitio para aqui pois estava a escrever errado
+            *data->terminate = 1;
+            wakeup_processes(data,sems);
+            wait_processes(data);
+
             doStats(data,op_counter);
             writeStop();
             stop_execution(data,buffers,sems);
@@ -248,11 +253,9 @@ void read_status(struct main_data* data, struct semaphores* sems){
 *reservadas. Para tal, pode usar as outras funções auxiliares do main.h.
 */
 void stop_execution(struct main_data* data, struct communication_buffers* buffers, struct semaphores* sems){
-    *data->terminate = 1;
-    wakeup_processes(data,sems);
-    wait_processes(data);
-    write_statistics(data);
+    //não faz sentido pois temos de abrir um ficheiro e rescrever o que já foi escrito
     closeStatsFile();
+    write_statistics(data);
     destroy_semaphores(sems);
     destroy_memory_buffers(data,buffers);
 }

@@ -1,5 +1,5 @@
 Process Statistics:
-        Restaurante 0 preparou 0 pedidos!
+        Restaurante 0 preparou 1 pedidos!
         Restaurante 1 preparou 0 pedidos!
         Restaurante 2 preparou 0 pedidos!
         Restaurante 3 preparou 0 pedidos!
@@ -9,7 +9,7 @@ Process Statistics:
         Restaurante 7 preparou 0 pedidos!
         Restaurante 8 preparou 0 pedidos!
         Restaurante 9 preparou 0 pedidos!
-        Motorista 0 entregou 0 pedidos!
+        Motorista 0 entregou 1 pedidos!
         Motorista 1 entregou 0 pedidos!
         Motorista 2 entregou 0 pedidos!
         Motorista 3 entregou 0 pedidos!
@@ -19,7 +19,7 @@ Process Statistics:
         Motorista 7 entregou 0 pedidos!
         Motorista 8 entregou 0 pedidos!
         Motorista 9 entregou 0 pedidos!
-        Cliente 0 recebeu 0 pedidos!
+        Cliente 0 recebeu 1 pedidos!
         Cliente 1 recebeu 0 pedidos!
         Cliente 2 recebeu 0 pedidos!
         Cliente 3 recebeu 0 pedidos!
@@ -36,11 +36,9 @@ Status: C
 Restaurant id: 0
 Driver id: 0
 Client id: 0
-Created: 2022-05-18 21:28:12.567
-Restaurant time: 2022-05-18 21:28:12.567
-Driver time: 2022-05-18 21:28:12.567
-Client time (end): 2022-05-18 21:28:12.567
-Total Time: 0.0 s (470600 ns)
+Created: 2022-05-18 21:38:39.762
+Restaurant time: 2022-05-18 21:38:39.762
+Driver time: 2022-05-18 21:38:39.762
+Client time (end): 2022-05-18 21:38:39.762
+Total Time: 0.0 s (485800 ns)
 
-Request: 1
-Status: I
