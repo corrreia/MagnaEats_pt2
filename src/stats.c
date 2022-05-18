@@ -4,12 +4,17 @@
 #include <time.h>
 
 FILE * out_file;
+int op_counter;
 
 void createStatsFile(char * fileName){
     out_file = fopen (fileName, "w"); 
 }
 
-void doStats(struct main_data* data, int op_counter){
+void setOpCounter(int counter){
+    op_counter = counter;
+}
+
+void doStats(struct main_data* data){
     fputs("Process Statistics:\n",out_file);
     for(int i = 0; i< data->n_restaurants;i++){
         fputs("        Restaurante ",out_file);

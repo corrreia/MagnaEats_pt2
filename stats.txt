@@ -36,9 +36,9 @@ Status: C
 Restaurant id: 0
 Driver id: 0
 Client id: 0
-Created: 2022-05-18 21:38:39.762
-Restaurant time: 2022-05-18 21:38:39.762
-Driver time: 2022-05-18 21:38:39.762
-Client time (end): 2022-05-18 21:38:39.762
-Total Time: 0.0 s (485800 ns)
+Created: 2022-05-18 21:51:16.629
+Restaurant time: 2022-05-18 21:51:16.629
+Driver time: 2022-05-18 21:51:16.629
+Client time (end): 2022-05-18 21:51:16.630
+Total Time: 0.0 s (362200 ns)
 

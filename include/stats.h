@@ -5,7 +5,9 @@
 
 void createStatsFile(char * fileName);
 
-void doStats(struct main_data* data, int op_counter);
+void setOpCounter(int counter);
+
+void doStats(struct main_data* data);
 
 void closeStatsFile();
 
