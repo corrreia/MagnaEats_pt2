@@ -21,7 +21,10 @@ int launch_restaurant(int restaurant_id, struct communication_buffers* buffers, 
         int t = execute_restaurant(restaurant_id,buffers,data,sems);
         exit(t);
     }
-    else{
+    else if(pid == -1){
+        perror("Error in fork");
+        exit(1);
+    }else{
         return pid;
     }
 }
@@ -36,7 +39,10 @@ int launch_driver(int driver_id, struct communication_buffers* buffers, struct m
         int t = execute_driver(driver_id,buffers,data,sems);
         exit(t);
     }
-    else{
+    else if(pid == -1){
+        perror("Error in fork");
+        exit(1);
+    }else{
         return pid;
     }
 }
@@ -51,8 +57,10 @@ int launch_client(int client_id, struct communication_buffers* buffers, struct m
     if((pid=fork())== 0){
         int t = execute_client(client_id,buffers,data,sems);
         exit(t);
-    }
-    else{
+    }else if(pid == -1){
+        perror("Error in fork");
+        exit(1);
+    }else{
         return pid;
     }
 }
