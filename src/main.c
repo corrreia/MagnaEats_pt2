@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include <string.h>
 #include "../include/main.h"
 #include "../include/log.h"
@@ -145,6 +146,7 @@ void user_interaction(struct communication_buffers* buffers, struct main_data* d
         }
         else if(strstr(pedido,"op") !=0){
             create_request(&op_counter,buffers,data,sems,log_file);
+            sleep(1);
         }
         else if(strstr(pedido,"help") !=0){
             printf("Operações possiveis:\n");
