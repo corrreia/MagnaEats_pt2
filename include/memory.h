@@ -11,6 +11,8 @@
 #define STR_SHM_TERMINATE				"SHM_TERMINATE"
 
 #include <time.h>
+#include <semaphore.h>
+#include "synchronization.h"
 
 struct pointers { 																					
 	int in;  																						
@@ -110,7 +112,7 @@ void write_driver_client_buffer(struct rnd_access_buffer* buffer, int buffer_siz
 * A leitura deve ser feita tendo em conta o tipo de buffer e as regras de leitura em buffers desse tipo.
 * Se não houver nenhuma operação disponível, afeta op->id com o valor -1.
 */
-void read_main_rest_buffer(struct rnd_access_buffer* buffer, int rest_id, int buffer_size, struct operation* op);
+void read_main_rest_buffer(struct rnd_access_buffer* buffer, int rest_id, int buffer_size, struct operation* op,struct semaphores* sems);
 
 
 /* Função que lê uma operação do buffer de memória partilhada entre os restaurantes e os motoristas,
@@ -126,7 +128,7 @@ void read_rest_driver_buffer(struct circular_buffer* buffer, int buffer_size, st
 * ser feita tendo em conta o tipo de buffer e as regras de leitura em buffers desse tipo. Se não houver
 * nenhuma operação disponível, afeta op->id com o valor -1.
 */
-void read_driver_client_buffer(struct rnd_access_buffer* buffer, int client_id, int buffer_size, struct operation* op);
+void read_driver_client_buffer(struct rnd_access_buffer* buffer, int client_id, int buffer_size, struct operation* op,struct semaphores* sems);
 
 
 #endif

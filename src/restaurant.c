@@ -47,9 +47,9 @@ int execute_restaurant(int rest_id, struct communication_buffers* buffers, struc
 void restaurant_receive_operation(struct operation* op, int rest_id, struct communication_buffers* buffers, struct main_data* data, struct semaphores* sems)
 {
     if(*(data -> terminate) == 1) return;
-    consume_begin(sems->main_rest);
-    read_main_rest_buffer(buffers->main_rest,rest_id,data -> buffers_size,op);
-    consume_end(sems->main_rest);
+    //consume_begin(sems->main_rest);
+    read_main_rest_buffer(buffers->main_rest,rest_id,data -> buffers_size,op,sems);
+    //consume_end(sems->main_rest);
 }
 
 

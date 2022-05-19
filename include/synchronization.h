@@ -2,7 +2,7 @@
 #define SYNCHRONIZATION_H_GUARD
 
 #include <semaphore.h>
-	
+
 // Nomes usados na criacao dos semaforos
 #define STR_SEM_MAIN_REST_FULL 	"sem_main_rest_full"
 #define STR_SEM_MAIN_REST_EMPTY "sem_main_rest_empty"

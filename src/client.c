@@ -36,9 +36,9 @@ int execute_client(int client_id, struct communication_buffers* buffers, struct 
 */
 void client_get_operation(struct operation* op, int client_id, struct communication_buffers* buffers, struct main_data* data, struct semaphores* sems){
     if(*(data -> terminate) == 1) return;
-    consume_begin(sems->driv_cli);
-    read_driver_client_buffer(buffers->driv_cli,client_id,data -> buffers_size,op);
-    consume_end(sems->driv_cli);
+    //consume_begin(sems->driv_cli);
+    read_driver_client_buffer(buffers->driv_cli,client_id,data -> buffers_size,op,sems);
+    //consume_end(sems->driv_cli);
 }
 
 /* Função que processa uma operação, alterando o seu campo receiving_client para o id

@@ -121,14 +121,14 @@ void user_interaction(struct communication_buffers* buffers, struct main_data* d
 * da estrutura data.
 */
 void launch_processes(struct communication_buffers* buffers, struct main_data* data, struct semaphores* sems){
-    for(int i = 0; i< data->n_restaurants;i++){
-        data->driver_pids[i] = launch_restaurant(i,buffers,data,sems);       
-    }
     for(int i = 0; i< data->n_drivers;i++){
-        data->client_pids[i] = launch_driver(i,buffers,data,sems);
+        data->driver_pids[i] = launch_driver(i,buffers,data,sems);     
     }
     for(int i = 0; i< data->n_clients;i++){
-        data->restaurant_pids[i] = launch_client(i,buffers,data,sems);
+        data->client_pids[i] = launch_client(i,buffers,data,sems);
+    }
+    for(int i = 0; i< data->n_restaurants;i++){
+        data->restaurant_pids[i] = launch_restaurant(i,buffers,data,sems);       
     }
 }
 

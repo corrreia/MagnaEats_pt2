@@ -1,12 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "memory.h"
+#include "../include/memory.h"
 #include <sys/mman.h>
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <string.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <semaphore.h>
+#include "../include/synchronization.h"
 
 /* Função que reserva uma zona de memória partilhada com tamanho indicado
 * por size e nome name, preenche essa zona de memória com o valor 0, e 
@@ -122,16 +124,18 @@ void write_driver_client_buffer(struct rnd_access_buffer* buffer, int buffer_siz
 * A leitura deve ser feita tendo em conta o tipo de buffer e as regras de leitura em buffers desse tipo.
 * Se não houver nenhuma operação disponível, afeta op->id com o valor -1.
 */
-void read_main_rest_buffer(struct rnd_access_buffer* buffer, int rest_id, int buffer_size, struct operation* op){
+void read_main_rest_buffer(struct rnd_access_buffer* buffer, int rest_id, int buffer_size, struct operation* op,struct semaphores* sems){
     int n;
     int val = 0;
     for(n = 0; n < buffer_size; n++){
         if(buffer -> ptrs[n] == 1){
             if(buffer -> buffer[n].requested_rest == rest_id){
+                consume_begin(sems->main_rest);
                 memcpy(op, &buffer -> buffer[n], sizeof(struct operation));
                 buffer -> ptrs[n] = 0;
 
                 val == 1;
+                consume_end(sems->main_rest);
                 return;
 
             }
@@ -165,15 +169,17 @@ void read_rest_driver_buffer(struct circular_buffer* buffer, int buffer_size, st
 * ser feita tendo em conta o tipo de buffer e as regras de leitura em buffers desse tipo. Se não houver
 * nenhuma operação disponível, afeta op->id com o valor -1.
 */
-void read_driver_client_buffer(struct rnd_access_buffer* buffer, int client_id, int buffer_size, struct operation* op){
+void read_driver_client_buffer(struct rnd_access_buffer* buffer, int client_id, int buffer_size, struct operation* op,struct semaphores* sems){
     int n;
     int val = 0;
     for(n = 0; n < buffer_size; n++){
         if(buffer -> ptrs[n] == 1){
             if(buffer -> buffer[n].requesting_client == client_id){
+                consume_begin(sems->driv_cli);
                 memcpy(op, &(buffer -> buffer[n]), sizeof(struct operation));
                 buffer -> ptrs[n] = 0;
                 val == 1;
+                consume_end(sems->driv_cli);
                 return;
             }
         }
