@@ -9,6 +9,7 @@
 #include "../include/driver.h"
 #include "../include/client.h"
 #include "../include/restaurant.h"
+#include "../include/mesignal.h"
 
 
 /* Função que inicia um novo processo restaurante através da função fork do SO. O novo
@@ -18,6 +19,7 @@
 int launch_restaurant(int restaurant_id, struct communication_buffers* buffers, struct main_data* data, struct semaphores* sems){
     int pid;
     if((pid=fork())== 0){
+        ignoreSignal();
         int t = execute_restaurant(restaurant_id,buffers,data,sems);
         exit(t);
     }
@@ -36,6 +38,7 @@ int launch_restaurant(int restaurant_id, struct communication_buffers* buffers, 
 int launch_driver(int driver_id, struct communication_buffers* buffers, struct main_data* data, struct semaphores* sems){
     int pid;
     if((pid=fork())== 0){
+        ignoreSignal();
         int t = execute_driver(driver_id,buffers,data,sems);
         exit(t);
     }
@@ -55,6 +58,7 @@ int launch_driver(int driver_id, struct communication_buffers* buffers, struct m
 int launch_client(int client_id, struct communication_buffers* buffers, struct main_data* data,  struct semaphores* sems){
     int pid;
     if((pid=fork())== 0){
+        ignoreSignal();
         int t = execute_client(client_id,buffers,data,sems);
         exit(t);
     }else if(pid == -1){

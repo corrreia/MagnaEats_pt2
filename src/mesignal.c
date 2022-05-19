@@ -10,7 +10,7 @@
 #include <semaphore.h>
 
 #include "../include/globals.h"
-//[*]->[*]->createdynamicfodasse();
+
 //CTRL-C
 void ctrlC(){
     stop_execution(data, buffers, sems);
@@ -26,6 +26,10 @@ void createSignal (){
     // buffers1 = buffers;
     // sems1 = sems;
     signal(SIGINT, ctrlC);
+}
+
+void ignoreSignal(){
+    signal(SIGINT, SIG_IGN);
 }
 
 

@@ -9,6 +9,8 @@ void ctrlC();
 
 void createSignal();
 
+void ignoreSignal();
+
 void createAlarm(int alarmTime);
 
 void doAlarm(struct operation* results);
