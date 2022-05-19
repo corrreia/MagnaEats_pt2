@@ -14,17 +14,11 @@
 //CTRL-C
 void ctrlC(){
     stop_execution(data, buffers, sems);
-    //printf("AHHHHHH EU TO MALUCO\n");
-
-    //printf("%s",data -> results[0].requested_dish);
-
+    //Arrajar maneira de saber o op_counter 
     exit(1);
 }
 
 void createSignal (){
-    // data1 = data;
-    // buffers1 = buffers;
-    // sems1 = sems;
     signal(SIGINT, ctrlC);
 }
 
@@ -34,7 +28,7 @@ void ignoreSignal(){
 
 
 void alarmHandler(){
-    
+    printf("AHHH EU TO MALUCO\n");
 }
 //Alarme
 void createAlarm(int alarmTime){

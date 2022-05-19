@@ -29,12 +29,10 @@ void lerFicheiro(struct main_data* data, char fileName[]){
     fscanf(in_file,"%s",  t1);
     createStatsFile(t1);
     //strcpy(data -> statistics_filename,t1);
-    /*
-    int time = 1; //default value for time is 1
-    fscanf(in_file,"%d", &time);
+    int time = 5; //default value for time is 1
+    //fscanf(in_file,"%d", &time);
     createAlarm(time);
 
-    */
     createSignal();
     //close file
     fclose(in_file);
