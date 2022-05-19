@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "../include/configuration.h"
+#include "../include/memory.h"
 #include "../include/main.h"
 #include "../include/log.h"
 #include "../include/stats.h"
@@ -28,9 +29,13 @@ void lerFicheiro(struct main_data* data, char fileName[]){
     fscanf(in_file,"%s",  t1);
     createStatsFile(t1);
     //strcpy(data -> statistics_filename,t1);
+    /*
+    int time = 1; //default value for time is 1
+    fscanf(in_file,"%d", &time);
+    createAlarm(time);
 
-    fscanf(in_file,"%d",  &data -> alarm_time);
-
+    */
+    createSignal();
     //close file
     fclose(in_file);
 }

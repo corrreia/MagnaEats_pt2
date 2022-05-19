@@ -1,9 +1,10 @@
 OBJ_dir = obj
-OBJECTOS = main.o driver.o client.o memory.o process.o restaurant.o metime.o synchronization.o configuration.o stats.o log.o
+OBJECTOS = main.o driver.o client.o memory.o process.o restaurant.o metime.o synchronization.o configuration.o stats.o log.o mesignal.o
 metime.o = metime.h
 stats.o = stats.h main.h
 log.o = log.h
-configuration.o = main.h configuration.h log.h stats.h
+mesignal.o = mesignal
+configuration.o = main.h configuration.h log.h stats.h mesignal.h memory.h
 synchronization.o = synchronization.h
 main.o = main.h memory.h process.h metime.h synchronization.h configuration.h
 driver.o = driver.h main.h memory.h metime.h synchronization.h

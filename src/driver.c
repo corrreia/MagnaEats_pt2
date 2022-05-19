@@ -41,9 +41,9 @@ int execute_driver(int driver_id, struct communication_buffers* buffers, struct 
 void driver_receive_operation(struct operation* op, struct communication_buffers* buffers, struct main_data* data, struct semaphores* sems){
     if(*(data ->terminate) == 1) return;
 
-    consume_begin(sems->rest_driv);
+    //consume_begin(sems->rest_driv);
     read_rest_driver_buffer(buffers -> rest_driv,data -> buffers_size,op);
-    consume_end(sems->rest_driv);
+    //consume_end(sems->rest_driv);
 
 }
 
@@ -57,9 +57,9 @@ void driver_process_operation(struct operation* op, int driver_id, struct main_d
     op -> status = 'D';
     registarTempo(&op->driver_time);
     //Será que é o mutex do results??
-    semaphore_mutex_unlock(sems->results_mutex);
+    //semaphore_mutex_unlock(sems->results_mutex);
     data -> results[op -> id] = *op;
-    semaphore_mutex_lock(sems->results_mutex);
+    //semaphore_mutex_lock(sems->results_mutex);
     *counter = *counter + 1;
 }
 
@@ -69,7 +69,7 @@ void driver_process_operation(struct operation* op, int driver_id, struct main_d
 */
 void driver_send_answer(struct operation* op, struct communication_buffers* buffers, struct main_data* data, struct semaphores* sems){
 
-    //produce_begin(sems->driv_cli);
+    produce_begin(sems->driv_cli);
     write_driver_client_buffer(buffers -> driv_cli, data -> buffers_size ,op);
-    //produce_end(sems->driv_cli);
+    produce_end(sems->driv_cli);
 }

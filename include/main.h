@@ -15,7 +15,7 @@ struct main_data {
 	int n_clients;			//número de clientes
 	//char log_filename [40];
 	//char statistics_filename [40];
-	int alarm_time;
+	//int alarm_time;
 
 	int *restaurant_pids;	//process ids de restaurantes
 	int *driver_pids;		//process ids de motoristas

@@ -3,6 +3,11 @@
 
 #include "main.h"
 #include "memory.h"
+#include <semaphore.h>
+
+void ctrlC();
+
+void createSignal();
 
 void createAlarm(int alarmTime);
 

@@ -2,25 +2,32 @@
 #include <stdlib.h>
 #include <string.h>
 #include "../include/main.h"
-#include "../include/log.h"
 #include "../include/memory.h"
+#include "../include/synchronization.h"
+#include "../include/log.h"
 #include "../include/process.h"
 #include "../include/configuration.h"
-#include "../include/synchronization.h"
 #include "../include/metime.h"
 #include "../include/stats.h"
 
+#include "../include/globals.h"
+
+
+
 
 int main(int argc, char *argv[]) {
-    //init data structures
-    struct main_data* data = create_dynamic_memory(sizeof(struct main_data));
-    struct communication_buffers* buffers =
-    create_dynamic_memory(sizeof(struct communication_buffers));
+
+    data = create_dynamic_memory(sizeof(struct main_data));
+
+    buffers = create_dynamic_memory(sizeof(struct communication_buffers));
+
     buffers->main_rest = create_dynamic_memory(sizeof(struct rnd_access_buffer));
     buffers->rest_driv = create_dynamic_memory(sizeof(struct circular_buffer));
     buffers->driv_cli = create_dynamic_memory(sizeof(struct rnd_access_buffer));
-    // init semaphore data structure
-    struct semaphores* sems = create_dynamic_memory(sizeof(struct semaphores));
+
+    // init semaphore data structures
+    sems = create_dynamic_memory(sizeof(struct semaphores));
+
     sems->main_rest = create_dynamic_memory(sizeof(struct prodcons));
     sems->rest_driv = create_dynamic_memory(sizeof(struct prodcons));
     sems->driv_cli = create_dynamic_memory(sizeof(struct prodcons));
@@ -79,7 +86,6 @@ void user_interaction(struct communication_buffers* buffers, struct main_data* d
         printf("Introduzir comando:\n");
         scanf("%s", pedido);
 
-
         if(strstr(pedido,"stop") !=0){
             setOpCounter(op_counter);
             writeStop();
@@ -92,6 +98,7 @@ void user_interaction(struct communication_buffers* buffers, struct main_data* d
         }
         else if(strstr(pedido,"op") !=0){
             create_request(&op_counter,buffers,data,sems);
+            
         }
         else if(strstr(pedido,"help") !=0){
             printf("Operações possiveis:\n");
@@ -104,6 +111,7 @@ void user_interaction(struct communication_buffers* buffers, struct main_data* d
         else{
             printf("Ação não reconhecida, insira 'help' para assistência.\n");
         }
+        
     }
 
 }
@@ -388,6 +396,4 @@ void destroy_semaphores(struct semaphores* sems){
     semaphore_destroy(STR_SEM_DRIV_CLI_MUTEX,sems-> driv_cli -> mutex);
 
     semaphore_destroy(STR_SEM_RESULTS_MUTEX,sems-> results_mutex);
-
-    //Falta retirar um no results
 }
