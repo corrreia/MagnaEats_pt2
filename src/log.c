@@ -21,7 +21,7 @@ void writeStop(){
 
 void writeOp(int client_id,int restaurant_id,char * dish){
     getTime(log_file);
-    fprintf(log_file,"%s %d %d %s\n","op", client_id, restaurant_id,dish);
+    fprintf(log_file,"%s %d %d %s\n","request", client_id, restaurant_id,dish);
 
 }
 void writeHelp(){

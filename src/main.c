@@ -77,7 +77,7 @@ void user_interaction(struct communication_buffers* buffers, struct main_data* d
     char pedido [40];
 
     printf("Operações possiveis:\n");
-    printf("        op client restaurant dish - criar um novo pedido\n");
+    printf("        request client restaurant dish - criar um novo pedido\n");
     printf("        read id - consultar o estado de um pedido\n");
     printf("        stop - termina a execução do magnaeats.\n");
     printf("        help - imprime informação sobre as ações disponíveis.\n");
@@ -96,13 +96,13 @@ void user_interaction(struct communication_buffers* buffers, struct main_data* d
             read_status(data,sems);
 
         }
-        else if(strstr(pedido,"op") !=0){
+        else if(strstr(pedido,"request") !=0){
             create_request(&op_counter,buffers,data,sems);
             
         }
         else if(strstr(pedido,"help") !=0){
             printf("Operações possiveis:\n");
-            printf("        op client restaurant dish - criar um novo pedido\n");
+            printf("        request client restaurant dish - criar um novo pedido\n");
             printf("        read id - consultar o estado de um pedido\n");
             printf("        stop - termina a execução do magnaeats.\n");
             printf("        help - imprime informação sobre as ações disponíveis.\n");
