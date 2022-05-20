@@ -88,7 +88,6 @@ void user_interaction(struct communication_buffers* buffers, struct main_data* d
         scanf("%s", pedido);
 
         if(strstr(pedido,"stop") !=0){
-            //setOpCounter(op_counter);
             writeStop();
             stop_execution(data,buffers,sems);
             exit(1);
