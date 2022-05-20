@@ -10,10 +10,12 @@
 #include "../include/metime.h"
 #include "../include/stats.h"
 
-#include "../include/globals.h"
+//#include "../include/globals.h"
 
-
-
+struct main_data* data;
+struct communication_buffers* buffers;
+struct semaphores* sems;
+int op_counter = 0;
 
 int main(int argc, char *argv[]) {
 
@@ -73,7 +75,6 @@ void main_args(int argc, char* argv[], struct main_data* data){
 * help - imprime informação sobre os comandos disponiveis
 */
 void user_interaction(struct communication_buffers* buffers, struct main_data* data, struct semaphores* sems){
-    int op_counter = 0;
     char pedido [40];
 
     printf("Operações possiveis:\n");
@@ -87,7 +88,7 @@ void user_interaction(struct communication_buffers* buffers, struct main_data* d
         scanf("%s", pedido);
 
         if(strstr(pedido,"stop") !=0){
-            setOpCounter(op_counter);
+            //setOpCounter(op_counter);
             writeStop();
             stop_execution(data,buffers,sems);
             exit(1);
@@ -212,12 +213,10 @@ void create_request(int* op_counter, struct communication_buffers* buffers, stru
         memcpy(&data->results[*op_counter],&op,sizeof(struct operation));
         semaphore_mutex_lock(sems->results_mutex);
 
-
         produce_begin(sems->main_rest);   
         write_main_rest_buffer(buffers -> main_rest,data -> buffers_size,&op);
         produce_end(sems->main_rest);
         
-
         *op_counter = *op_counter + 1;
     }
     else{

@@ -7,7 +7,7 @@
 
 void ctrlC();
 
-void createSignal();
+void catchSignal();
 
 void ignoreSignal();
 

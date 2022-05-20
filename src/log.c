@@ -6,30 +6,30 @@
 FILE * log_file;
 
 void createLogFile(char * filename){
-    log_file =  fopen (filename, "w");
+    log_file =  fopen (filename, "w"); // open file for writing
 }
 
-void writeRead(int op){
+void writeRead(int op){ //write read and args to log file
     getTime();
     fprintf(log_file,"%s %d\n","read",op);
 }
 
-void writeStop(){
+void writeStop(){  //write stop in log file
     getTime();
     fprintf(log_file,"%s\n","stop");
 }
 
-void writeOp(int client_id,int restaurant_id,char * dish){
+void writeOp(int client_id,int restaurant_id,char * dish){  //write operation and arguments to log file
     getTime(log_file);
     fprintf(log_file,"%s %d %d %s\n","request", client_id, restaurant_id,dish);
 
 }
-void writeHelp(){
+void writeHelp(){ //write help to log file
     getTime(log_file);
     fprintf(log_file,"%s\n","help");
 }
 
-void getTime(){
+void getTime(){  //get time and write in log file
     struct timespec timer;
     clock_gettime( CLOCK_REALTIME, &timer);
     char t [40];
@@ -39,5 +39,5 @@ void getTime(){
 }
 
 void closeFile(){
-    closeFile(log_file);
+    closeFile(log_file); //close file
 }

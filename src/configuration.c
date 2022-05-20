@@ -14,26 +14,27 @@ void lerFicheiro(struct main_data* data, char fileName[]){
     //Open file
     FILE *in_file  = fopen(fileName, "r"); // read only 
 
-    fscanf(in_file,"%d",  &data -> max_ops);
-    fscanf(in_file,"%d",  &data -> buffers_size);
-    fscanf(in_file,"%d",  &data -> n_restaurants);
-    fscanf(in_file,"%d",  &data -> n_drivers);
-    fscanf(in_file,"%d",  &data -> n_clients);
+    fscanf(in_file,"%d", &data -> max_ops); // read max_ops
+    fscanf(in_file,"%d", &data -> buffers_size); // read buffers_size
+    fscanf(in_file,"%d", &data -> n_restaurants); // read n_restaurants
+    fscanf(in_file,"%d", &data -> n_drivers); // read n_drivers
+    fscanf(in_file,"%d", &data -> n_clients); // read n_clients
 
-    char ts [30];
-    fscanf(in_file,"%s", ts);
-    createLogFile(ts);
-    //strcpy(data -> log_filename,ts);
+    char logs_file_name [30];
+    fscanf(in_file,"%s", logs_file_name);
+    createLogFile(logs_file_name);
+ 
 
-    char t1 [30];  //talvez alterar?
-    fscanf(in_file,"%s",  t1);
-    createStatsFile(t1);
-    //strcpy(data -> statistics_filename,t1);
-    int time = 5; //default value for time is 1
-    //fscanf(in_file,"%d", &time);
-    createAlarm(time);
+    char stats_file_name [30];  //stats file name
+    fscanf(in_file,"%s",  stats_file_name);
+    createStatsFile(stats_file_name);
+    
+    int time = 5; //default value for time is 5
+    fscanf(in_file,"%d", &time); // read time from file
+    createAlarm(time);  //create alarm with time	
 
-    createSignal();
+    catchSignal(); //catch CTRL-C signal
+
     //close file
     fclose(in_file);
 }
