@@ -10,8 +10,6 @@
 #include "../include/metime.h"
 #include "../include/stats.h"
 
-//#include "../include/globals.h"
-
 struct main_data* data;
 struct communication_buffers* buffers;
 struct semaphores* sems;
@@ -40,6 +38,7 @@ int main(int argc, char *argv[]) {
     create_semaphores(data, sems);
     launch_processes(buffers, data, sems);
     user_interaction(buffers, data, sems);
+
     //release memory before terminating
     destroy_dynamic_memory(data);
     destroy_dynamic_memory(buffers->main_rest);
@@ -97,8 +96,7 @@ void user_interaction(struct communication_buffers* buffers, struct main_data* d
 
         }
         else if(strstr(pedido,"request") !=0){
-            create_request(&op_counter,buffers,data,sems);
-            
+            create_request(&op_counter,buffers,data,sems);       
         }
         else if(strstr(pedido,"help") !=0){
             printf("Operações possiveis:\n");
@@ -195,7 +193,7 @@ void create_request(int* op_counter, struct communication_buffers* buffers, stru
             0,
             0,
             0,
-            0,//colocar startingtime
+            0,
             0,
             0,
             0
@@ -313,6 +311,8 @@ void destroy_memory_buffers(struct main_data* data, struct communication_buffers
     destroy_dynamic_memory(data->client_stats);
     destroy_dynamic_memory(data->driver_stats);
     
+    
+
     for(int i = 0; i< data->max_ops;i++){
         if(data->results[i].requested_dish != NULL){
             destroy_dynamic_memory(data->results[i].requested_dish);
@@ -350,7 +350,6 @@ void create_semaphores(struct main_data* data, struct semaphores* sems){
 
     sems->results_mutex = semaphore_create(STR_SEM_RESULTS_MUTEX,1);
 
-    //Falta criar um no results
 }
 
 /* Função que acorda todos os processos adormecidos em semáforos, para que
@@ -360,20 +359,13 @@ void create_semaphores(struct main_data* data, struct semaphores* sems){
 * máximo de processos que possam lá estar.
 */
 void wakeup_processes(struct main_data* data, struct semaphores* sems){
-    //não funciona para n_restaurants, n_drivers e n_clients
     for(int i = 0; i<data->n_restaurants;i++){
         produce_end(sems-> main_rest);
-        produce_end(sems-> rest_driv);
-        produce_end(sems -> driv_cli);
     }
     for(int i = 0; i<data->n_drivers;i++){
-        produce_end(sems-> main_rest);
-        produce_end(sems-> rest_driv);
-        produce_end(sems -> driv_cli);
+        produce_end(sems-> rest_driv);;
     }
     for(int i = 0; i<data->n_clients;i++){
-        produce_end(sems-> main_rest);
-        produce_end(sems-> rest_driv);
         produce_end(sems -> driv_cli);
     }
 }

@@ -57,7 +57,6 @@ struct communication_buffers {
 	struct rnd_access_buffer* driv_cli;  		//buffer para motoristas entregarem pedidos aos clientes
 };
 
-
 /* Função que reserva uma zona de memória partilhada com tamanho indicado
 * por size e nome name, preenche essa zona de memória com o valor 0, e 
 * retorna um apontador para a mesma. Pode concatenar o resultado da função
